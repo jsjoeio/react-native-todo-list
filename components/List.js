@@ -10,7 +10,11 @@ export default class List extends React.Component {
           <Item
             key={index}
             text={itemText}
-            toggleModal={() => this.props.toggleModal(itemText, index)} />
+            toggleModal={() => this.props.toggleModal({
+              type: 'update',
+              itemText,
+              index
+            })} />
         ))}
       </View>
     );

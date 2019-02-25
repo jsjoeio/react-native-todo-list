@@ -2,33 +2,26 @@ import * as React from 'react';
 import { Text, View, StyleSheet, Modal, Button, TextInput, SafeAreaView } from 'react-native';
 
 export default class Item extends React.Component {
-  state = {
-    currentValue: '',
-  };
-
-  handleChange = value => this.setState({ currentValue: value });
-
-  // handleSubmit = () => {
-  //   const updatedItems = [...this.state.items]
-  //   updatedItems.push(this.state.value)
-  //   this.setState({
-  //     items: updatedItems,
-  //     value: ''
-  //   })
-  // }
+  handleModalClick = () => {
+    if (this.props.title === 'Update item') {
+      return this.props.handleChange
+    }
+    return this.props.handleSubmit
+  }
 
   render() {
     const { text } = this.props;
+
     return (
       <Modal visible={this.props.visible} onRequestClose={() => {}}>
         <SafeAreaView>
           <TextInput
-            value={this.props.editingValue}
+            value={this.props.value}
             onChangeText={this.props.handleChange}
             style={styles.textInput}
           />
-          <Button title="Update item" onPress={this.props.handleUpdate} />
-          <Button title="Close modal" onPress={this.props.toggleModal} />
+          <Button title={this.props.title} onPress={this.props.handleSubmit} />
+          <Button title="Close modal" onPress={this.handleModalClick} />
         </SafeAreaView>
       </Modal>
     );

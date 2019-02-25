@@ -23,9 +23,9 @@ export default class App extends React.Component {
   state = {
     items: ['avocados', 'tomatoes', 'bread'],
     value: '',
-    editingValue: '',
     editingIndex: 0,
-    modalVisible: false
+    modalVisible: false,
+    modalTitle: 'Add item'
   }
 
   handleChange = key => value => this.setState({[key]: value})
@@ -35,26 +35,31 @@ export default class App extends React.Component {
     updatedItems.push(this.state.value)
     this.setState({
       items: updatedItems,
-      value: ''
+      value: '',
+      modalVisible: !this.state.modalVisible
     })
   }
 
   handleUpdate = () => {
     const updatedItems = [...this.state.items]
-    updatedItems.splice(this.state.editingIndex, 1, this.state.editingValue)
+    updatedItems.splice(this.state.editingIndex, 1, this.state.value)
     this.setState({
       items: updatedItems,
-      editingValue: '',
+      value: '',
       modalVisible: !this.state.modalVisible
     })
   }
 
-  toggleModal = (itemText, index) => {
-    console.log('toggling modal...')
+  toggleModal = ({ type, itemText, index}) => {
+    if (type === 'update') {
+      this.setState({
+        modalTitle: 'Update item'
+      })
+    }
     this.setState({
       modalVisible: !this.state.modalVisible,
-      editingValue: itemText,
-      editingIndex: index
+      value: itemText || '',
+      editingIndex: index || 0
     })
   }
 
@@ -69,15 +74,16 @@ export default class App extends React.Component {
           </View>
           <View style={appStyles.list}>
             <List items={this.state.items} toggleModal={this.toggleModal}/>
-            <TextInput value={this.state.value} onChangeText={this.handleChange('value')} style={appStyles.textInput}/>
-          <Button title='Add to list' onPress={this.handleSubmit}/>
+          <Button title='+ Add task' onPress={this.toggleModal}/>
           </View>
           <Modal
+            title={this.state.modalTitle}
             visible={this.state.modalVisible}
             toggleModal={this.toggleModal}
-            editingValue={this.state.editingValue}
-            handleChange={this.handleChange('editingValue')}
+            value={this.state.value}
+            handleChange={this.handleChange('value')}
             handleUpdate={this.handleUpdate}
+            handleSubmit={this.handleSubmit}
             />
         </SafeAreaView>
       </KeyboardAvoidingView>
